@@ -10,13 +10,16 @@ import {
   Image,
   Modal,
   ModalContent,
-  ModalHeader,
   ModalBody,
-  ModalFooter,
   useDisclosure,
 } from "@heroui/react";
 import { JSX, useState, useEffect, useRef } from "react";
 import RaceViewModel from "../ViewModels/RaceViewModel";
+import {
+  backgroundColourVariants,
+  outlineColourVariants,
+} from "../StyleVariants/ColourVariants";
+import { strategyCards } from "../Collections/StrategyCards";
 
 interface Props {
   playerName: string;
@@ -33,7 +36,6 @@ const Stopwatch = (props: Props): JSX.Element => {
   const startTimeRef = useRef(0);
 
   const [initiative, setInitiative] = useState<number>(0);
-  const [openModal, setOpenModal] = useState<boolean>(false);
 
   function formatTime(milliseconds: number) {
     var hours = Math.floor(milliseconds / (1000 * 60 * 60));
@@ -74,78 +76,6 @@ const Stopwatch = (props: Props): JSX.Element => {
   function stop() {
     setIsRunning(false);
   }
-
-  interface colourVariants {
-    [key: string]: string;
-  }
-
-  interface strategyCard {
-    initiative: number;
-    card: string;
-  }
-
-  const outlineColourVariants: colourVariants = {
-    red: "outline-red-500",
-    green: "outline-green-500",
-    orange: "outline-orange-500",
-    blue: "outline-blue-500",
-    purple: "outline-purple-500",
-    pink: "outline-pink-500",
-    yellow: "outline-yellow-500",
-    gray: "outline-gray-500",
-    brown: "outline-amber-900",
-  };
-
-  const backgroundColourVariants: colourVariants = {
-    red: "bg-red-500",
-    green: "bg-green-500",
-    orange: "bg-orange-500",
-    blue: "bg-blue-500",
-    purple: "bg-purple-500",
-    pink: "bg-pink-500",
-    yellow: "bg-yellow-500",
-    gray: "bg-gray-500",
-    brown: "bg-amber-900",
-  };
-
-  const strategyCards: strategyCard[] = [
-    {
-      initiative: 1,
-      card: "./Strategy Cards/leadership.webp",
-    },
-    {
-      initiative: 2,
-      card: "./Strategy Cards/diplomacy.webp",
-    },
-    {
-      initiative: 3,
-      card: "./Strategy Cards/politics.webp",
-    },
-    {
-      initiative: 4,
-      card: "./Strategy Cards/construction.webp",
-    },
-    {
-      initiative: 5,
-      card: "./Strategy Cards/trade.webp",
-    },
-    {
-      initiative: 6,
-      card: "./Strategy Cards/warfare.webp",
-    },
-    {
-      initiative: 7,
-      card: "./Strategy Cards/technology.webp",
-    },
-    {
-      initiative: 8,
-      card: "./Strategy Cards/imperial.webp",
-    },
-    {
-      initiative: 0,
-      card: "./Strategy Cards/unknown.png",
-    },
-  ];
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
