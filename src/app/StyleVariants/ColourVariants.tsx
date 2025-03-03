@@ -12,6 +12,7 @@ const outlineColourVariants: colourVariants = {
   yellow: "outline-yellow-500",
   gray: "outline-gray-500",
   brown: "outline-amber-900",
+  default: "",
 };
 
 const backgroundColourVariants: colourVariants = {
@@ -24,6 +25,7 @@ const backgroundColourVariants: colourVariants = {
   yellow: "bg-yellow-500",
   gray: "bg-gray-500",
   brown: "bg-amber-900",
+  default: "",
 };
 
 export default colourVariants;
