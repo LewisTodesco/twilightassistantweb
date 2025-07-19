@@ -35,6 +35,7 @@ interface Props {
   setPlayers: Dispatch<SetStateAction<PlayerViewModel[]>>;
   selectedRaces: number[];
   setSelectedRaces: Dispatch<SetStateAction<number[]>>;
+  emptySlot: boolean;
 }
 
 const PlayerSelectCard = (props: Props): JSX.Element => {
@@ -42,7 +43,7 @@ const PlayerSelectCard = (props: Props): JSX.Element => {
     <>
       <Card
         className={
-          "min-w-[300px] min-h-[400px] " +
+          "max-w-[300px] min-h-[250px] " +
           (props.player.Race.ThemeColour !== undefined
             ? outlineColourVariants[props.player.Race.ThemeColour]
             : "")
@@ -123,12 +124,6 @@ const PlayerSelectCard = (props: Props): JSX.Element => {
             </div>
           </div>
         </CardBody>
-        <Divider />
-        <CardFooter className="flex flex-row justify-between">
-          <div className="ml-2">
-            <Button onPress={() => {}}>Confirm</Button>
-          </div>
-        </CardFooter>
       </Card>
     </>
   );

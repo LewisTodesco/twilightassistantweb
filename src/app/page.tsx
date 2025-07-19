@@ -3,109 +3,65 @@
 import { useState } from "react";
 import Stopwatch from "./Components/Stopwatch";
 import { races } from "./Collections/Races";
-import { Button, ButtonGroup, Divider } from "@heroui/react";
+import { Button, ButtonGroup, Divider, Image, Tab, Tabs } from "@heroui/react";
 import PlayerViewModel from "./ViewModels/PlayerViewModel";
 import PlayerSelectCard from "./Components/PlayerSelectCard";
+import StarfieldCanvas from "./StarfieldCanvas";
+import PlayerSelectScreen from "./PlayerSelectScreen";
 
 export default function Home() {
   const [selectedInitiative, setSelectedInitiative] = useState<number[]>([]);
   const [startGame, setStartGame] = useState<boolean>(false);
   const [players, setPlayers] = useState<PlayerViewModel[]>([]);
-  const [selectedRaces, setSelectedRaces] = useState<number[]>([]);
+  const [selectPlayers, setSelectPlayers] = useState<boolean>(false);
 
   function addSelectedInitiative(initiative: number) {
     var selectedInitiativeLocal = [...selectedInitiative, initiative];
     setSelectedInitiative(selectedInitiativeLocal);
   }
 
-  function setupPlayers(count: number) {
-    var localPlayers: PlayerViewModel[] = [];
-    for (var i = 0; i < count; i++) {
-      localPlayers.push({
-        Id: i,
-        Name: "",
-        Race: {
-          Id: -1,
-          Name: "",
-          Logo: "",
-          ThemeColour: "default",
-        },
-      });
-    }
-    setPlayers(localPlayers);
-  }
-
-  function updatePlayers(updatedPlayer: PlayerViewModel) {
-    var localPlayers = players.map((x) => {
-      if (x.Id === updatedPlayer.Id) {
-        return updatedPlayer;
-      } else {
-        return x;
-      }
-    });
-    setPlayers(localPlayers);
-  }
-
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-start justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-row flex-wrap gap-8 row-start-2 items-center sm:items-start dark">
-        {!startGame && (
-          <div className="flex flex-row flex-wrap items-center content-center w-full">
-            <div className="flex flex-row flex-wrap items-center content-center w-full">
-              <p className={"w-full text-center"}>
-                Select the number of players:
-              </p>
-            </div>
-            <Divider className="m-4" />
-            <div className="flex flex-row flex-wrap items-center content-center w-full">
-              <ButtonGroup className="flex flex-row flex-wrap items-center content-center w-full">
-                <Button onPress={() => setupPlayers(3)}>3</Button>
-                <Button onPress={() => setupPlayers(4)}>4</Button>
-                <Button onPress={() => setupPlayers(5)}>5</Button>
-                <Button onPress={() => setupPlayers(6)}>6</Button>
-                <Button onPress={() => setupPlayers(7)}>7</Button>
-                <Button onPress={() => setupPlayers(8)}>8</Button>
-              </ButtonGroup>
-            </div>
-            <Divider className="m-4" />
+    <main className="flex flex-column flex-wrap content-start sm:content-start dark min-h-screen">
+      <StarfieldCanvas></StarfieldCanvas>
+      <div className="flex flex-row justify-center content-center w-full pt-2 z-1">
+        <Image src={"./tilogo.png"} />
+      </div>
+
+      {!selectPlayers && (
+        <div className="flex flex-col justify-center content-center w-full h-[80vh] pt-2 z-1">
+          <div className="flex flex-row justify-center content-center pt-2 z-1">
+            <Button onPress={() => setSelectPlayers(true)}>
+              Select Players
+            </Button>
           </div>
-        )}
-
-        <div className="flex flex-row flex-wrap gap-8 w-full justify-between">
-          {players.length !== 0 &&
-            players.map((x) => {
-              return (
-                <PlayerSelectCard
-                  races={races}
-                  player={x}
-                  players={players}
-                  key={x.Id}
-                  setPlayers={setPlayers}
-                  selectedRaces={selectedRaces}
-                  setSelectedRaces={setSelectedRaces}
-                />
-              );
-            })}
         </div>
+      )}
 
-        {startGame &&
-          races.map((x) => {
-            return (
-              <Stopwatch
-                key={x.Id}
-                playerName={"Lewis"}
-                playerRace={{
-                  Id: x.Id,
-                  Name: x.Name,
-                  Logo: x.Logo,
-                  ThemeColour: x.ThemeColour,
-                }}
-                addSelectedInitiative={(i) => addSelectedInitiative(i)}
-                selectedInitiative={selectedInitiative}
-              />
-            );
-          })}
-      </main>
-    </div>
+      {!startGame && selectPlayers && (
+        <PlayerSelectScreen
+          players={players}
+          setStartGame={(x) => setStartGame(x)}
+          setPlayers={setPlayers}
+        />
+      )}
+
+      {startGame &&
+        players.map((x) => {
+          return (
+            <Stopwatch
+              key={x.Id}
+              playerName={"Lewis"}
+              playerRace={{
+                Id: x.Id,
+                Name: x.Name,
+                Logo: x.Race.Logo,
+                ThemeColour: x.Race.ThemeColour,
+              }}
+              addSelectedInitiative={(i) => addSelectedInitiative(i)}
+              selectedInitiative={selectedInitiative}
+            />
+          );
+        })}
+    </main>
   );
 }
