@@ -1,10 +1,8 @@
 "use client";
 
 import {
-  Button,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Divider,
   Image,
@@ -12,20 +10,12 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import {
-  JSX,
-  useState,
-  useEffect,
-  useRef,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { JSX, Dispatch, SetStateAction } from "react";
 import RaceViewModel from "../ViewModels/RaceViewModel";
 import {
-  backgroundColourVariants,
+  blurVariants,
   outlineColourVariants,
-} from "../StyleVariants/ColourVariants";
-import { strategyCards } from "../Collections/StrategyCards";
+} from "../StyleVariants/StyleVariants";
 import PlayerViewModel from "../ViewModels/PlayerViewModel";
 
 interface Props {
@@ -39,11 +29,18 @@ interface Props {
 }
 
 const PlayerSelectCard = (props: Props): JSX.Element => {
+  console.log(props.selectedRaces);
+
   return (
-    <>
+    <div
+      className={
+        "flex justify-center w-100 " +
+        (props.emptySlot ? blurVariants["small"] : blurVariants["none"])
+      }
+    >
       <Card
         className={
-          "max-w-[300px] min-h-[250px] " +
+          "w-[300px] h-[250px] " +
           (props.player.Race.ThemeColour !== undefined
             ? outlineColourVariants[props.player.Race.ThemeColour]
             : "")
@@ -87,6 +84,7 @@ const PlayerSelectCard = (props: Props): JSX.Element => {
                     })
                   );
                 }}
+                isDisabled={props.emptySlot}
                 value={props.player.Name}
               />
             </div>
@@ -95,7 +93,9 @@ const PlayerSelectCard = (props: Props): JSX.Element => {
                 label="Player Race"
                 onChange={(e) => {
                   props.setSelectedRaces([
-                    ...props.selectedRaces,
+                    ...props.selectedRaces.filter(
+                      (x) => x !== props.player.Race.Id
+                    ),
                     Number(e.target.value),
                   ]);
                   props.setPlayers(
@@ -116,6 +116,8 @@ const PlayerSelectCard = (props: Props): JSX.Element => {
                     ? ""
                     : props.player.Race.Id.toString(),
                 ]}
+                disabledKeys={props.selectedRaces.map((x) => x.toString())}
+                isDisabled={props.emptySlot}
               >
                 {props.races.map((race) => {
                   return <SelectItem key={race.Id}>{race.Name}</SelectItem>;
@@ -125,7 +127,7 @@ const PlayerSelectCard = (props: Props): JSX.Element => {
           </div>
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 };
 

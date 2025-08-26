@@ -4,6 +4,7 @@ interface PlayerViewModel {
   Id: number;
   Name: string;
   Race: RaceViewModel;
+  Initiative: number;
 }
 
 export default PlayerViewModel;

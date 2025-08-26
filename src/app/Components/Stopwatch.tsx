@@ -18,7 +18,7 @@ import RaceViewModel from "../ViewModels/RaceViewModel";
 import {
   backgroundColourVariants,
   outlineColourVariants,
-} from "../StyleVariants/ColourVariants";
+} from "../StyleVariants/StyleVariants";
 import { strategyCards } from "../Collections/StrategyCards";
 
 interface Props {
@@ -83,7 +83,7 @@ const Stopwatch = (props: Props): JSX.Element => {
     <>
       <Card
         className={
-          "min-w-[300px] min-h-[400px] " +
+          "w-[300px] h-[550px] " +
           (isRunning ? outlineColourVariants[props.playerRace.ThemeColour] : "")
         }
         shadow="sm"

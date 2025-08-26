@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import Delaunay from "delaunay-fast";
 
 const particleCount = 45;
@@ -40,7 +40,11 @@ interface Vec2 {
   y: number;
 }
 
-const StarfieldCanvas = () => {
+interface Props {
+  setLoaded: Dispatch<SetStateAction<boolean>>;
+}
+
+const StarfieldCanvas = (props: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef<Vec2>({ x: 0, y: 0 });
   const n = useRef(0);
@@ -420,6 +424,8 @@ const StarfieldCanvas = () => {
     });
 
     animate();
+
+    props.setLoaded(true);
 
     return () => {
       window.removeEventListener("resize", resize);

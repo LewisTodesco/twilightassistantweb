@@ -2,33 +2,28 @@
 
 import { useState } from "react";
 import Stopwatch from "./Components/Stopwatch";
-import { races } from "./Collections/Races";
-import { Button, ButtonGroup, Divider, Image, Tab, Tabs } from "@heroui/react";
+import { Button, Image } from "@heroui/react";
 import PlayerViewModel from "./ViewModels/PlayerViewModel";
-import PlayerSelectCard from "./Components/PlayerSelectCard";
 import StarfieldCanvas from "./StarfieldCanvas";
 import PlayerSelectScreen from "./PlayerSelectScreen";
+import GameScreen from "./GameScreen";
+import InitiativeTrackCanvas from "./Components/InitiativeTrackCanvas";
 
 export default function Home() {
-  const [selectedInitiative, setSelectedInitiative] = useState<number[]>([]);
   const [startGame, setStartGame] = useState<boolean>(false);
   const [players, setPlayers] = useState<PlayerViewModel[]>([]);
   const [selectPlayers, setSelectPlayers] = useState<boolean>(false);
-
-  function addSelectedInitiative(initiative: number) {
-    var selectedInitiativeLocal = [...selectedInitiative, initiative];
-    setSelectedInitiative(selectedInitiativeLocal);
-  }
+  const [canvasLoaded, setCanvasLoaded] = useState<boolean>(false);
 
   return (
     <main className="flex flex-column flex-wrap content-start sm:content-start dark min-h-screen">
-      <StarfieldCanvas></StarfieldCanvas>
+      <StarfieldCanvas setLoaded={setCanvasLoaded}></StarfieldCanvas>
       <div className="flex flex-row justify-center content-center w-full pt-2 z-1">
         <Image src={"./tilogo.png"} />
       </div>
 
-      {!selectPlayers && (
-        <div className="flex flex-col justify-center content-center w-full h-[80vh] pt-2 z-1">
+      {canvasLoaded && !selectPlayers && (
+        <div className="absolute flex flex-col justify-center content-center w-full h-[95vh] pt-2 z-1">
           <div className="flex flex-row justify-center content-center pt-2 z-1">
             <Button onPress={() => setSelectPlayers(true)}>
               Select Players
@@ -45,23 +40,9 @@ export default function Home() {
         />
       )}
 
-      {startGame &&
-        players.map((x) => {
-          return (
-            <Stopwatch
-              key={x.Id}
-              playerName={"Lewis"}
-              playerRace={{
-                Id: x.Id,
-                Name: x.Name,
-                Logo: x.Race.Logo,
-                ThemeColour: x.Race.ThemeColour,
-              }}
-              addSelectedInitiative={(i) => addSelectedInitiative(i)}
-              selectedInitiative={selectedInitiative}
-            />
-          );
-        })}
+      {startGame && (
+        <GameScreen players={players} setPlayers={setPlayers}></GameScreen>
+      )}
     </main>
   );
 }
