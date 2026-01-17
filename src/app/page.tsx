@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Stopwatch from "./Components/Stopwatch";
 import { Button, Image } from "@heroui/react";
 import PlayerViewModel from "./ViewModels/PlayerViewModel";
 import StarfieldCanvas from "./StarfieldCanvas";
 import PlayerSelectScreen from "./PlayerSelectScreen";
 import GameScreen from "./GameScreen";
-import InitiativeTrackCanvas from "./Components/InitiativeTrackCanvas";
 
 export default function Home() {
   const [startGame, setStartGame] = useState<boolean>(false);
@@ -19,7 +17,7 @@ export default function Home() {
     <main className="flex flex-column flex-wrap content-start sm:content-start dark min-h-screen">
       <StarfieldCanvas setLoaded={setCanvasLoaded}></StarfieldCanvas>
       <div className="flex flex-row justify-center content-center w-full pt-2 z-1">
-        <Image src={"./tilogo.png"} />
+        <Image src={"./tilogo.png"} alt="twilight imperium 4th edition logo" />
       </div>
 
       {canvasLoaded && !selectPlayers && (

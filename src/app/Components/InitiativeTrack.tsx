@@ -11,9 +11,13 @@ interface Props {
 const InitiativeTrack = (props: Props): JSX.Element => {
   const [initiativeItems, setInitiativeItems] = useState<PlayerViewModel[]>([]);
 
-  useEffect(() => {
-    getInitiativeItems();
-  }, [props.players]);
+  useEffect(
+    () => {
+      getInitiativeItems();
+    },
+    // eslint-disable-next-line
+    [props.players]
+  );
 
   function getInitiativeItems() {
     if (props.players.some((p) => p.Initiative === 0)) {

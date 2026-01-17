@@ -1,10 +1,8 @@
 "use client";
 
-import { Alert, Button, ButtonGroup, Divider } from "@heroui/react";
-import { Dispatch, JSX, SetStateAction, useEffect, useState } from "react";
-import PlayerSelectCard from "./Components/PlayerSelectCard";
+import { Alert, Button } from "@heroui/react";
+import { Dispatch, JSX, SetStateAction, useState } from "react";
 import PlayerViewModel, { Action } from "./ViewModels/PlayerViewModel";
-import { races } from "./Collections/Races";
 import Stopwatch from "./Components/Stopwatch";
 import { gridVariants } from "./StyleVariants/StyleVariants";
 import InitiativeTrack from "./Components/InitiativeTrack";
@@ -12,7 +10,6 @@ import useWindowDimensions, {
   ErrorType,
   getErrorText,
 } from "./helperFunctions";
-import InitiativeTrackCanvas from "./Components/InitiativeTrackCanvas";
 
 interface Props {
   players: PlayerViewModel[];
@@ -28,8 +25,8 @@ const GameScreen = (props: Props): JSX.Element => {
   const { height, width } = useWindowDimensions();
 
   function addSelectedInitiative(initiative: number, playerId: number) {
-    var selectedInitiativesLocal = [...selectedInitiatives, initiative];
-    var playersLocal = props.players.map((x) => {
+    let selectedInitiativesLocal = [...selectedInitiatives, initiative];
+    let playersLocal = props.players.map((x) => {
       if (x.Id === playerId) {
         if (x.Initiative != 0) {
           selectedInitiativesLocal = selectedInitiativesLocal.filter(
@@ -47,7 +44,7 @@ const GameScreen = (props: Props): JSX.Element => {
   }
 
   function clearInitiative() {
-    var localPlayers = props.players.map((x) => {
+    let localPlayers = props.players.map((x) => {
       x.Initiative = 0;
       x.StrategyUsed = false;
       x.Passed = false;

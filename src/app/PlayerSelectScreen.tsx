@@ -21,20 +21,24 @@ const PlayerSelectScreen = (props: Props): JSX.Element => {
   const [emptyPlayerSlots, setEmptyPlayerSlots] = useState<boolean[]>([]);
   const [error, setError] = useState<ErrorType>(ErrorType.None);
 
-  useEffect(() => {
-    var emptySlots = playerSlots.map((x) => {
-      if (x > props.players.length) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    setEmptyPlayerSlots(emptySlots);
-  }, [props.players]);
+  useEffect(
+    () => {
+      let emptySlots = playerSlots.map((x) => {
+        if (x > props.players.length) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      setEmptyPlayerSlots(emptySlots);
+    },
+    // eslint-disable-next-line
+    [props.players]
+  );
 
   function setupPlayers(count: number) {
-    var localPlayers: PlayerViewModel[] = [];
-    for (var i = 0; i < count; i++) {
+    let localPlayers: PlayerViewModel[] = [];
+    for (let i = 0; i < count; i++) {
       localPlayers.push({
         Id: i,
         Name: "",
@@ -118,7 +122,7 @@ const PlayerSelectScreen = (props: Props): JSX.Element => {
             })}
           {emptyPlayerSlots.map((x, i) => {
             if (x) {
-              var emptyPlayer: PlayerViewModel = {
+              let emptyPlayer: PlayerViewModel = {
                 Id: i,
                 Name: "",
                 Race: {

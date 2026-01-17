@@ -41,20 +41,20 @@ const Stopwatch = (props: Props): JSX.Element => {
   const startTimeRef = useRef(0);
 
   function formatTime(milliseconds: number) {
-    var hours = Math.floor(milliseconds / (1000 * 60 * 60));
-    var minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
-    var seconds = Math.floor((milliseconds / 1000) % 60);
+    let hours = Math.floor(milliseconds / (1000 * 60 * 60));
+    let minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
+    let seconds = Math.floor((milliseconds / 1000) % 60);
 
-    var hString = hours.toString().padStart(2, "0");
-    var mString = minutes.toString().padStart(2, "0");
-    var sString = seconds.toString().padStart(2, "0");
+    let hString = hours.toString().padStart(2, "0");
+    let mString = minutes.toString().padStart(2, "0");
+    let sString = seconds.toString().padStart(2, "0");
 
     return `${hString}:${mString}:${sString}.`;
   }
 
   function formatDecimalTime(milliseconds: number) {
-    var hundreths = Math.floor((milliseconds % 1000) / 10);
-    var hunString = hundreths.toString().padStart(2, "0");
+    let hundreths = Math.floor((milliseconds % 1000) / 10);
+    let hunString = hundreths.toString().padStart(2, "0");
 
     return `${hunString}`;
   }
@@ -213,6 +213,7 @@ const Stopwatch = (props: Props): JSX.Element => {
                           ? "blur-sm"
                           : ""
                       }
+                      alt="strategy cards"
                     />
                   );
                 }
