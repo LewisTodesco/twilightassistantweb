@@ -258,23 +258,6 @@ const StarfieldCanvas = (props: Props) => {
 
             this.drawLine(points);
 
-            // if (
-            //   this.stage === 1 &&
-            //   this.linked.length > 0 &&
-            //   this.linked.length < this.verts.length
-            // ) {
-            //   const head = particles.current[this.verts[this.linked.length]];
-            //   const pos = position(head.x, head.y, head.z);
-            //   contextRef.current.beginPath();
-            //   contextRef.current.globalAlpha = 0.5;
-            //   contextRef.current.fillStyle = color;
-            //   contextRef.current.shadowColor = color;
-            //   contextRef.current.shadowBlur = 30;
-            //   contextRef.current.arc(pos.x, pos.y, 3, 0, Math.PI * 2);
-            //   contextRef.current.fill();
-            //   contextRef.current.shadowBlur = 0;
-            //   contextRef.current.globalAlpha = 1;
-            // }
             break;
           }
 
@@ -299,36 +282,15 @@ const StarfieldCanvas = (props: Props) => {
         }
       }
 
-      // drawLine(points: number[][], alpha = linkOpacity) {
-      //   if (!contextRef.current) return;
-
-      //   contextRef.current.shadowColor = color;
-      //   contextRef.current.shadowBlur = 10;
-
-      //   if (points.length <= 1 || alpha <= 0) return;
-      //   contextRef.current.globalAlpha = alpha;
-      //   contextRef.current.beginPath();
-      //   for (let i = 0; i < points.length - 1; i++) {
-      //     contextRef.current.moveTo(points[i][0], points[i][1]);
-      //     contextRef.current.lineTo(points[i + 1][0], points[i + 1][1]);
-      //   }
-      //   contextRef.current.strokeStyle = color;
-      //   contextRef.current.lineWidth = lineWidth;
-      //   contextRef.current.stroke();
-      //   contextRef.current.closePath();
-      //   contextRef.current.globalAlpha = 1;
-      // }
-
       drawLine(points: number[][], alpha = linkOpacity) {
         if (!contextRef.current) return;
 
         if (points.length <= 1 || alpha <= 0) return;
 
-        // 🌟 Soft glowing line
         contextRef.current.save();
         contextRef.current.globalAlpha = alpha;
         contextRef.current.shadowColor = color;
-        contextRef.current.shadowBlur = 20; // Glow intensity
+        contextRef.current.shadowBlur = 20;
 
         contextRef.current.beginPath();
         for (let i = 0; i < points.length - 1; i++) {
@@ -346,7 +308,6 @@ const StarfieldCanvas = (props: Props) => {
       }
     }
 
-    // Initialization
     resize();
     mouse.current.x = canvas.clientWidth / 2;
     mouse.current.y = canvas.clientHeight / 2;

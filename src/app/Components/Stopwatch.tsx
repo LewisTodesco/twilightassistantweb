@@ -25,7 +25,10 @@ interface Props {
   playerName: string;
   playerRace: RaceViewModel;
   addSelectedInitiative: (i: number) => void;
-  selectedInitiative: number[];
+  selectedInitiatives: number[];
+  strategyUsed: boolean;
+  passed: boolean;
+  initiative: number;
 }
 
 const Stopwatch = (props: Props): JSX.Element => {
@@ -34,8 +37,6 @@ const Stopwatch = (props: Props): JSX.Element => {
 
   const intervalRef = useRef<NodeJS.Timeout>(null);
   const startTimeRef = useRef(0);
-
-  const [initiative, setInitiative] = useState<number>(0);
 
   function formatTime(milliseconds: number) {
     var hours = Math.floor(milliseconds / (1000 * 60 * 60));
@@ -79,22 +80,28 @@ const Stopwatch = (props: Props): JSX.Element => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  console.log("player: " + props.playerName);
+  console.log("initiative: " + props.initiative);
+
   return (
     <>
       <Card
         className={
           "w-[300px] h-[550px] " +
-          (isRunning ? outlineColourVariants[props.playerRace.ThemeColour] : "")
+          (isRunning
+            ? outlineColourVariants[props.playerRace.ThemeColour]
+            : "") +
+          (props.passed ? "blur-sm" : "")
         }
         shadow="sm"
+        isDisabled={props.passed}
       >
         <CardHeader className="flex gap-3">
           <Image
             alt={props.playerRace.Name}
-            height={60}
             radius="sm"
             src={props.playerRace.Logo}
-            width={60}
+            className="object-cover h-[60px] z-10"
           />
           <div className="flex flex-col">
             <p className="text-lg">{props.playerName}</p>
@@ -114,12 +121,24 @@ const Stopwatch = (props: Props): JSX.Element => {
                 height={280}
                 radius="sm"
                 src={
-                  strategyCards[
-                    strategyCards.findIndex((x) => x.initiative === initiative)
-                  ].card
+                  props.strategyUsed
+                    ? strategyCards[
+                        strategyCards.findIndex(
+                          (x) => x.initiative === props.initiative
+                        )
+                      ].used
+                    : strategyCards[
+                        strategyCards.findIndex(
+                          (x) => x.initiative === props.initiative
+                        )
+                      ].card
                 }
                 className="item-center"
-                onClick={onOpen}
+                onClick={() => {
+                  if (!props.passed) {
+                    onOpen();
+                  }
+                }}
               />
             </div>
           </div>
@@ -136,6 +155,7 @@ const Stopwatch = (props: Props): JSX.Element => {
               onPress={() => {
                 start();
               }}
+              isDisabled={props.passed}
             >
               Start
             </Button>
@@ -150,6 +170,7 @@ const Stopwatch = (props: Props): JSX.Element => {
               onPress={() => {
                 stop();
               }}
+              isDisabled={props.passed}
             >
               Stop
             </Button>
@@ -160,29 +181,33 @@ const Stopwatch = (props: Props): JSX.Element => {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className="min-w-[1400px] bg-transparent"
+        className="2xl:min-w-[1400px] xl:min-w-[1200px] lg:min-w-[900px] md:min-w-[600px] sm:w-[300px] w-[300px] bg-transparent"
         backdrop="blur"
         hideCloseButton
+        scrollBehavior="outside"
+        placement="bottom"
       >
         <ModalContent>
           {(onClose) => (
-            <ModalBody className={"flex flex-row flex-wrap"}>
+            <ModalBody
+              className={
+                "grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6 z-1"
+              }
+            >
               {strategyCards.map((s, i) => {
                 if (s.initiative !== 0) {
                   return (
                     <Image
                       key={i}
                       src={s.card}
-                      height={380}
                       onClick={() => {
-                        if (!props.selectedInitiative.includes(s.initiative)) {
-                          setInitiative(s.initiative);
+                        if (!props.selectedInitiatives.includes(s.initiative)) {
                           props.addSelectedInitiative(s.initiative);
                           onClose();
                         }
                       }}
                       className={
-                        props.selectedInitiative.includes(s.initiative)
+                        props.selectedInitiatives.includes(s.initiative)
                           ? "blur-sm"
                           : ""
                       }

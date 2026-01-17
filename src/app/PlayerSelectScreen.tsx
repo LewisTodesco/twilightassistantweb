@@ -3,7 +3,7 @@
 import { Alert, Button, ButtonGroup, Divider } from "@heroui/react";
 import { Dispatch, JSX, SetStateAction, useEffect, useState } from "react";
 import PlayerSelectCard from "./Components/PlayerSelectCard";
-import PlayerViewModel from "./ViewModels/PlayerViewModel";
+import PlayerViewModel, { Action } from "./ViewModels/PlayerViewModel";
 import { races } from "./Collections/Races";
 import { ErrorType, getErrorText } from "./helperFunctions";
 
@@ -44,7 +44,10 @@ const PlayerSelectScreen = (props: Props): JSX.Element => {
           Logo: "",
           ThemeColour: "default",
         },
-        Initiative: -1,
+        Initiative: 0,
+        StrategyUsed: false,
+        Passed: false,
+        NextAction: Action.UseStrategy,
       });
     }
     props.setPlayers(localPlayers);
@@ -125,6 +128,9 @@ const PlayerSelectScreen = (props: Props): JSX.Element => {
                   ThemeColour: "black",
                 },
                 Initiative: -1,
+                StrategyUsed: false,
+                Passed: false,
+                NextAction: Action.UseStrategy,
               };
               return (
                 <PlayerSelectCard

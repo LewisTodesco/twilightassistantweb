@@ -29,8 +29,6 @@ interface Props {
 }
 
 const PlayerSelectCard = (props: Props): JSX.Element => {
-  console.log(props.selectedRaces);
-
   return (
     <div
       className={
@@ -40,7 +38,7 @@ const PlayerSelectCard = (props: Props): JSX.Element => {
     >
       <Card
         className={
-          "w-[300px] h-[250px] " +
+          "w-[325px] h-[250px] " +
           (props.player.Race.ThemeColour !== undefined
             ? outlineColourVariants[props.player.Race.ThemeColour]
             : "")
@@ -50,14 +48,13 @@ const PlayerSelectCard = (props: Props): JSX.Element => {
         <CardHeader className="flex gap-3">
           <Image
             alt={props.player.Race.Name}
-            height={60}
             radius="sm"
             src={
               props.player.Race.Logo === ""
                 ? "./Faction Logos/unknown.png"
                 : props.player.Race.Logo
             }
-            width={60}
+            className="object-cover h-[60px] z-10"
           />
           <div className="flex flex-col">
             <p className="text-lg">{props.player.Name}</p>

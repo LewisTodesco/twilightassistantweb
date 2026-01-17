@@ -41,7 +41,12 @@ export default function Home() {
       )}
 
       {startGame && (
-        <GameScreen players={players} setPlayers={setPlayers}></GameScreen>
+        <GameScreen
+          players={players}
+          setPlayers={setPlayers}
+          setStartGame={setStartGame}
+          setSelectPlayers={setSelectPlayers}
+        ></GameScreen>
       )}
     </main>
   );

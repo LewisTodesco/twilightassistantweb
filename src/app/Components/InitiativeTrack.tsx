@@ -1,10 +1,11 @@
 import { Card, CardBody, CardFooter, Image } from "@heroui/react";
-import { JSX, useEffect, useState } from "react";
-import PlayerViewModel from "../ViewModels/PlayerViewModel";
+import { Dispatch, JSX, SetStateAction, useEffect, useState } from "react";
+import PlayerViewModel, { Action } from "../ViewModels/PlayerViewModel";
 import InitiativeTrackCanvas from "./InitiativeTrackCanvas";
 
 interface Props {
   players: PlayerViewModel[];
+  setPlayers: Dispatch<SetStateAction<PlayerViewModel[]>>;
 }
 
 const InitiativeTrack = (props: Props): JSX.Element => {
@@ -15,7 +16,8 @@ const InitiativeTrack = (props: Props): JSX.Element => {
   }, [props.players]);
 
   function getInitiativeItems() {
-    if (props.players.some((p) => p.Initiative === -1)) {
+    if (props.players.some((p) => p.Initiative === 0)) {
+      setInitiativeItems([]);
       return;
     }
 
@@ -30,24 +32,77 @@ const InitiativeTrack = (props: Props): JSX.Element => {
             return a.Initiative - b.Initiative;
           })
           .map((player, index) => (
-            <div className="mb-10">
+            <div className="mb-10" key={"container-" + index}>
               <Card
                 key={index}
                 isPressable
                 shadow="sm"
-                onPress={() => console.log("item pressed")}
-                className="h-[180px] w-[150px] z-10"
+                onPress={() => {
+                  switch (player.NextAction) {
+                    case Action.Reset: {
+                      props.setPlayers(
+                        props.players.map((p) => {
+                          if (p.Id === player.Id) {
+                            return {
+                              ...p,
+                              StrategyUsed: !p.StrategyUsed,
+                              Passed: !p.Passed,
+                              NextAction: Action.UseStrategy,
+                            };
+                          } else {
+                            return p;
+                          }
+                        })
+                      );
+                      break;
+                    }
+                    case Action.UseStrategy: {
+                      props.setPlayers(
+                        props.players.map((p) => {
+                          if (p.Id === player.Id) {
+                            return {
+                              ...p,
+                              StrategyUsed: !p.StrategyUsed,
+                              NextAction: Action.Pass,
+                            };
+                          } else {
+                            return p;
+                          }
+                        })
+                      );
+                      break;
+                    }
+                    case Action.Pass: {
+                      props.setPlayers(
+                        props.players.map((p) => {
+                          if (p.Id === player.Id) {
+                            return {
+                              ...p,
+                              Passed: !p.Passed,
+                              NextAction: Action.Reset,
+                            };
+                          } else {
+                            return p;
+                          }
+                        })
+                      );
+                      break;
+                    }
+                  }
+                }}
+                className={
+                  "h-[180px] w-[150px] z-10 " + (player.Passed ? "blur-sm" : "")
+                }
               >
                 <CardBody
-                  className="overflow-visible p-0 z-10"
+                  className="overflow-visible items-center p-0 z-10"
                   key={"body" + index}
                 >
                   <Image
                     alt={player.Race.Name}
-                    className="w-full object-cover h-[140px] z-10 p-5"
+                    className="object-cover h-[140px] z-10 p-2"
                     radius="sm"
                     src={player.Race.Logo}
-                    width="100%"
                     key={"image" + index}
                   />
                 </CardBody>
@@ -61,11 +116,11 @@ const InitiativeTrack = (props: Props): JSX.Element => {
             </div>
           ))}
         <InitiativeTrackCanvas
-          color="#c2e9e9ff"
-          glowColor="#768282ff"
-          speed={1}
+          color="#9baeaeff"
+          glowColor="#caf1f1ff"
+          speed={1.5}
           trailOpacity={0.08}
-          dotRadius={8}
+          dotRadius={10}
           cornerRadius={48}
           padding={75}
         ></InitiativeTrackCanvas>

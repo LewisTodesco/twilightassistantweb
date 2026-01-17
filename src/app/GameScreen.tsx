@@ -3,29 +3,36 @@
 import { Alert, Button, ButtonGroup, Divider } from "@heroui/react";
 import { Dispatch, JSX, SetStateAction, useEffect, useState } from "react";
 import PlayerSelectCard from "./Components/PlayerSelectCard";
-import PlayerViewModel from "./ViewModels/PlayerViewModel";
+import PlayerViewModel, { Action } from "./ViewModels/PlayerViewModel";
 import { races } from "./Collections/Races";
 import Stopwatch from "./Components/Stopwatch";
 import { gridVariants } from "./StyleVariants/StyleVariants";
 import InitiativeTrack from "./Components/InitiativeTrack";
-import { ErrorType, getErrorText } from "./helperFunctions";
+import useWindowDimensions, {
+  ErrorType,
+  getErrorText,
+} from "./helperFunctions";
 import InitiativeTrackCanvas from "./Components/InitiativeTrackCanvas";
 
 interface Props {
   players: PlayerViewModel[];
   setPlayers: Dispatch<SetStateAction<PlayerViewModel[]>>;
+  setStartGame: Dispatch<SetStateAction<boolean>>;
+  setSelectPlayers: Dispatch<SetStateAction<boolean>>;
 }
 
 const GameScreen = (props: Props): JSX.Element => {
   const [error, setError] = useState<ErrorType>(ErrorType.None);
-  const [selectedInitiative, setSelectedInitiative] = useState<number[]>([]);
+  const [selectedInitiatives, setSelectedInitiatives] = useState<number[]>([]);
+
+  const { height, width } = useWindowDimensions();
 
   function addSelectedInitiative(initiative: number, playerId: number) {
-    var selectedInitiativeLocal = [...selectedInitiative, initiative];
+    var selectedInitiativesLocal = [...selectedInitiatives, initiative];
     var playersLocal = props.players.map((x) => {
       if (x.Id === playerId) {
-        if (x.Initiative != -1) {
-          selectedInitiativeLocal = selectedInitiativeLocal.filter(
+        if (x.Initiative != 0) {
+          selectedInitiativesLocal = selectedInitiativesLocal.filter(
             (i) => i != x.Initiative
           );
         }
@@ -36,12 +43,24 @@ const GameScreen = (props: Props): JSX.Element => {
       } else return x;
     });
     props.setPlayers(playersLocal);
-    setSelectedInitiative(selectedInitiativeLocal);
+    setSelectedInitiatives(selectedInitiativesLocal);
+  }
+
+  function clearInitiative() {
+    var localPlayers = props.players.map((x) => {
+      x.Initiative = 0;
+      x.StrategyUsed = false;
+      x.Passed = false;
+      x.NextAction = Action.UseStrategy;
+      return x;
+    });
+    props.setPlayers(localPlayers);
+    setSelectedInitiatives([]);
   }
 
   return (
-    <div className="flex flex-row  justify-items-center flex-wrap w-full p-5 z-1">
-      <div className="justify-items-center w-full pt-5">
+    <div className="flex flex-row justify-items-center flex-wrap w-full min-h-[90vh] p-5 z-1">
+      <div className="flex flex-wrap justify-items-center w-full pt-5">
         <div
           className={
             gridVariants[props.players.length] + " justify-items-center"
@@ -59,18 +78,37 @@ const GameScreen = (props: Props): JSX.Element => {
                   ThemeColour: x.Race.ThemeColour,
                 }}
                 addSelectedInitiative={(i) => addSelectedInitiative(i, x.Id)}
-                selectedInitiative={selectedInitiative}
+                selectedInitiatives={selectedInitiatives}
+                strategyUsed={x.StrategyUsed}
+                passed={x.Passed}
+                initiative={x.Initiative}
               />
             );
           })}
         </div>
       </div>
-      <div className={"justify-items-center w-full pt-5"}>
-        <InitiativeTrack players={props.players}></InitiativeTrack>
-      </div>
+      {width > 1900 && (
+        <div className={"justify-items-center w-full pt-5"}>
+          <InitiativeTrack
+            players={props.players}
+            setPlayers={props.setPlayers}
+          ></InitiativeTrack>
+        </div>
+      )}
 
       <div className={"flex flex-row justify-center w-full p-5 z-1"}>
-        <Button onPress={() => {}}>Return to Player Select</Button>
+        <Button onPress={clearInitiative}>Reset Initiative</Button>
+      </div>
+      <div className={"flex flex-row justify-center w-full p-5 z-1"}>
+        <Button
+          onPress={() => {
+            props.setStartGame(false);
+            props.setSelectPlayers(true);
+            clearInitiative();
+          }}
+        >
+          Return to Player Select
+        </Button>
       </div>
 
       {error != ErrorType.None && (
