@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Twilight Assistant",
-  description: "An app to help speed up your Twilight Imperium games.",
+  description:
+    "An app to help speed up your Twilight Imperium games by gently tracking player turn time.",
 };
 
 export default function RootLayout({
@@ -24,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className='dark'>
+    <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
