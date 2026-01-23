@@ -151,6 +151,36 @@ const races: RaceViewModel[] = [
     Logo: "./Faction Logos/Council.png",
     ThemeColour: "yellow",
   },
+  {
+    Id: 25,
+    Name: "Last Bastion",
+    Logo: "./Faction Logos/LastBastion.png",
+    ThemeColour: "orange",
+  },
+  {
+    Id: 26,
+    Name: "The Ral Nel Consortium",
+    Logo: "./Faction Logos/RalNel.png",
+    ThemeColour: "green",
+  },
+  {
+    Id: 27,
+    Name: "The Deepwrought Scholarate",
+    Logo: "./Faction Logos/Deepwrought.png",
+    ThemeColour: "blue",
+  },
+  {
+    Id: 28,
+    Name: "The Crimson Rebellion",
+    Logo: "./Faction Logos/Crimson.png",
+    ThemeColour: "red",
+  },
+  {
+    Id: 29,
+    Name: "The Firmament / The Obsidian",
+    Logo: "./Faction Logos/Firmament.png",
+    ThemeColour: "yellow",
+  },
 ];
 
 export { races };
