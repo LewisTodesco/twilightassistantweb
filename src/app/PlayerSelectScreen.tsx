@@ -33,7 +33,7 @@ const PlayerSelectScreen = (props: Props): JSX.Element => {
       setEmptyPlayerSlots(emptySlots);
     },
     // eslint-disable-next-line
-    [props.players]
+    [props.players],
   );
 
   function setupPlayers(count: number) {
@@ -55,6 +55,7 @@ const PlayerSelectScreen = (props: Props): JSX.Element => {
       });
     }
     props.setPlayers(localPlayers);
+    setSelectedRaces([]);
   }
 
   function validateStart(): boolean {
