@@ -167,7 +167,7 @@ const races: RaceViewModel[] = [
     Id: 27,
     Name: "The Firmament / The Obsidian",
     Logo: "./Faction Logos/Firmament.png",
-    ThemeColour: "yellow",
+    ThemeColour: "purple",
   },
   {
     Id: 28,

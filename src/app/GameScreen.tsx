@@ -1,7 +1,16 @@
 "use client";
 
-import { Alert, Button } from "@heroui/react";
-import { Dispatch, JSX, SetStateAction, useState } from "react";
+import {
+  Alert,
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@heroui/react";
+import { Dispatch, JSX, SetStateAction, useEffect, useState } from "react";
 import PlayerViewModel, { Action } from "./ViewModels/PlayerViewModel";
 import Stopwatch from "./Components/Stopwatch";
 import { gridVariants } from "./StyleVariants/StyleVariants";
@@ -19,6 +28,20 @@ interface Props {
 }
 
 const GameScreen = (props: Props): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", beforeUnloadHandler);
+
+    return () => {
+      window.removeEventListener("beforeunload", beforeUnloadHandler);
+    };
+  }, []);
+
   const [error, setError] = useState<ErrorType>(ErrorType.None);
   const [selectedInitiatives, setSelectedInitiatives] = useState<number[]>([]);
 
@@ -30,7 +53,7 @@ const GameScreen = (props: Props): JSX.Element => {
       if (x.Id === playerId) {
         if (x.Initiative != 0) {
           selectedInitiativesLocal = selectedInitiativesLocal.filter(
-            (i) => i != x.Initiative
+            (i) => i != x.Initiative,
           );
         }
         return {
@@ -53,6 +76,35 @@ const GameScreen = (props: Props): JSX.Element => {
     });
     props.setPlayers(localPlayers);
     setSelectedInitiatives([]);
+  }
+
+  function clearSelectedFactions() {
+    let localPlayers = props.players.map((x) => {
+      x.Race = {
+        Id: -1,
+        Name: "",
+        Logo: "",
+        ThemeColour: "default",
+      };
+      return x;
+    });
+    props.setPlayers(localPlayers);
+  }
+
+  function handleOpen() {
+    onOpen();
+  }
+
+  function handleClose() {
+    onClose();
+  }
+
+  function handleContinue() {
+    props.setStartGame(false);
+    props.setSelectPlayers(true);
+    clearInitiative();
+    clearSelectedFactions();
+    onClose();
   }
 
   return (
@@ -99,9 +151,7 @@ const GameScreen = (props: Props): JSX.Element => {
       <div className={"flex flex-row justify-center w-full p-5 z-1"}>
         <Button
           onPress={() => {
-            props.setStartGame(false);
-            props.setSelectPlayers(true);
-            clearInitiative();
+            handleOpen();
           }}
         >
           Return to Player Select
@@ -119,6 +169,33 @@ const GameScreen = (props: Props): JSX.Element => {
           </div>
         </div>
       )}
+
+      <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Return to player selection
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  Returning to the player selection screen will erase all
+                  elapsed times.
+                </p>
+                <p>Are you sure you want to continue?</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onPress={handleClose}>
+                  Back
+                </Button>
+                <Button color="danger" variant="light" onPress={handleContinue}>
+                  Continue
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
